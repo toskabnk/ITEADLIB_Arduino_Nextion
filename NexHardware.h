@@ -23,11 +23,15 @@
  * @{ 
  */
 
+
+
+ 
 /**
  * Init Nextion.  
  * 
  * @return true if success, false for failure. 
  */
+
 bool nexInit(void);
 
 /**
@@ -51,5 +55,15 @@ bool recvRetNumber(uint32_t *number, uint32_t timeout = 100);
 uint16_t recvRetString(char *buffer, uint16_t len, uint32_t timeout = 100);
 void sendCommand(const char* cmd);
 bool recvRetCommandFinished(uint32_t timeout = 100);
+/** Codigo añadido
+ * Detecta si el dispositivo esta en sleepMode
+ * sleeModeNextion devuelve si el dispositivo entro automaticamente en modo sleep
+ * setSleepNextion te permite modificar la variable que almacena si esta en modo sleep o no, util cuando el dispositivo despierta por comando y automaticamente
+ */
+bool sleepModeNextion();
+bool setSleepNextion(bool status);
 
+/** Fin Codigo añadido
+ */
+ 
 #endif /* #ifndef __NEXHARDWARE_H__ */

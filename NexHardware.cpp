@@ -31,6 +31,16 @@
 #define NEX_RET_INVALID_BAUD            (0x11)
 #define NEX_RET_INVALID_VARIABLE        (0x1A)
 #define NEX_RET_INVALID_OPERATION       (0x1B)
+/** Codigo añadido
+ * Identificadores enviados por Nextion
+ */
+#define NEX_RET_SLEEP_MODE            (0X86)
+#define NEX_RET_EXIT_SLEEP_MODE            (0X87)
+/** Fin codigo añadido
+ * Identificadores enviados por Nextion
+ */
+
+bool _sleepModeNextion = false;
 
 /*
  * Receive uint32_t data. 
@@ -64,7 +74,7 @@ bool recvRetNumber(uint32_t *number, uint32_t timeout)
         && temp[7] == 0xFF
         )
     {
-        *number = ((uint32_t)temp[4] << 24) | ((uint32_t)temp[3] << 16) | (temp[2] << 8) | (temp[1]);
+        *number = ((uint32_t)temp[4] << 24) | ((uint32_t)temp[3] << 16) | ((uint32_t)temp[2] << 8) | ((uint32_t)temp[1]);
         ret = true;
     }
 
@@ -261,7 +271,46 @@ void nexLoop(NexTouch *nex_listen_list[])
                 }
                 
             }
-        }
+        } 
+		/** Codigo añadido
+		 * Cambia el estado de la variable que almacena el estado del modo sleep
+		 */
+		else 
+		{
+		
+			if(NEX_RET_SLEEP_MODE == c)
+			{
+				_sleepModeNextion=true;
+			} 
+			
+			else
+			{
+			
+				if(NEX_RET_EXIT_SLEEP_MODE == c)
+				{
+					_sleepModeNextion=false;
+				}
+			}
+		}
+		
+		/**Fin codigo añadido
+		 * Cambia el estado de la variable que almacena el estado del modo sleep
+		 */
     }
 }
+/** Codigo añadido
+ * Detecta si el dispositivo esta en sleepMode
+ * sleeModeNextion devuelve si el dispositivo entro automaticamente en modo sleep
+ * setSleepNextion te permite modificar la variable que almacena si esta en modo sleep o no, util cuando el dispositivo despierta por comando y automaticamente
+ */
 
+bool sleepModeNextion(){
+	return _sleepModeNextion;
+}
+
+bool setSleepNextion(bool status){
+	_sleepModeNextion=status;
+}
+
+/** Fin codigo añadido
+ */
